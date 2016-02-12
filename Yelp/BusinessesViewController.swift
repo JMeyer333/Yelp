@@ -2,8 +2,8 @@
 //  BusinessesViewController.swift
 //  Yelp
 //
-//  Created by Timothy Lee on 4/23/15.
-//  Copyright (c) 2015 Timothy Lee. All rights reserved.
+//  Created by Joanna Meyer on 2/11/16.
+//  Copyright (c) 2015 Joanna Meyer. All rights reserved.
 //
 
 import UIKit
@@ -11,12 +11,27 @@ import UIKit
 class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     var businesses: [Business]!
+    var searchBar: UISearchBar!
     
     @IBOutlet weak var tableView: UITableView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        searchBar = UISearchBar()
+        searchBar.sizeToFit()
+        
+        // the UIViewController comes with a navigationItem property
+        // this will automatically be initialized for you if when the
+        // view controller is added to a navigation controller's stack
+        // you just need to set the titleView to be the search bar
+        navigationItem.titleView = searchBar
+        
+        searchDisplayController?.displaysSearchBarInNavigationBar = true
+        
+        
         
         tableView.delegate = self
         tableView.dataSource = self
