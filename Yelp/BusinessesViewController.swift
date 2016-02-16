@@ -8,12 +8,21 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     var businesses: [Business]!
     var searchBar: UISearchBar!
+    //var showsCancelButton = true
     
     @IBOutlet weak var tableView: UITableView!
+    
+    var filterButton: UISearchBar!
+    //var showsCancelButton = true
+    
+    
+    var filteredSearch: String?
+    var searched = false
+    var searchedTerm: String?
     
     
     override func viewDidLoad() {
@@ -21,6 +30,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         
         searchBar = UISearchBar()
+        searchBar.delegate = self
         searchBar.sizeToFit()
         
         // the UIViewController comes with a navigationItem property
@@ -65,6 +75,33 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Dispose of any resources that can be recreated.
     }
     
+    func searchBar(searchBar:UISearchBar, textDidChange searchText: String) {
+        filteredSearch = searchBar.text
+        searched = true
+        //searchBar.showsCancelButton = true
+        searchBar.setShowsCancelButton(true, animated: true)
+        
+        Business.searchWithTerm(filteredSearch!, sort: .Distance, categories: [], deals: true) {(businesses: [Business]!, error: NSError!) -> Void in
+            self.businesses = businesses
+            self.tableView.reloadData()
+            
+            for business in businesses {
+                print(business.name!)
+                print(business.address!)
+            }
+        }
+    }
+
+    func searchBarSearchButtonClicked(searchBar:UISearchBar){
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarCancelButtonClicked(searchBar:UISearchBar){
+        searchBar.setShowsCancelButton(false, animated: false)
+        searchBar.endEditing(true)
+        searchBar.text = ""
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if businesses != nil {
             return businesses!.count
@@ -81,9 +118,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         
         return cell
     }
-    
-    
-    }
+
+
+
 
 
     /*
@@ -95,5 +132,5 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         // Pass the selected object to the new view controller.
     }
     */
-
+}
 
